@@ -64,10 +64,10 @@ Goal The Terrace (near 230) 05:02
 Main parts of Assignment 2 needing updates
 * Astar.java - This has all the A* code to implement in TODOs
 * Graph.java - This is where the connected components are calculated - find the TODOs and add the algorithm here.
+* GraphController.java - There are TODOs in here to be updated with drawing code both Assignment 2 and Assignment 1 updates.
 
 Update from Assignment 1
 * Parser.java - This has a couple of the assignment 1 updates to fix in the TODOs
-* GraphController.java - There are TODOs in here to be updated with drawing code, but mostly these are Assignment 1 updates.
 * Trie.java - currently this is empty so you can use your code from Assignment 1 and hook it up to the start and goal search. 
 
 Do not need to be changed but can be
