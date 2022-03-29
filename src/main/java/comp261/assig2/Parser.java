@@ -39,7 +39,7 @@ public class Parser {
                     String stopName = tokens[2];
                     double lat = Double.valueOf(tokens[4]);
                     double lon = Double.valueOf(tokens[5]);
-                    // TODO Assignment 1 add the data to a stop object
+                    // TODO: Assignment 1 add the data to a stop object
                 }
             }
             br.close();
@@ -73,7 +73,7 @@ public class Parser {
                         time = Double.parseDouble(tokens[3]);
                     }
 
-                    // TODO Assignment 1 add stop pattern id to the trip objects
+                    // TODO: Assignment 1 add stop pattern id to the trip objects
                 }
             }
             br.close();

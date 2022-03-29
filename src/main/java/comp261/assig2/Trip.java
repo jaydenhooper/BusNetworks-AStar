@@ -7,25 +7,25 @@ import javafx.scene.paint.Color;
 public class Trip {
     
     private String stop_pattern_id;
-    ArrayList<String> stops;
+    ArrayList<String> stopIds;
     ArrayList<Double> times;
     private Color colour;
 
     // constructor post parsing
-    public Trip(String stop_pattern_id, ArrayList<String> stops, ArrayList<Double> times) {
+    public Trip(String stop_pattern_id, ArrayList<String> stopIds, ArrayList<Double> times) {
         this.stop_pattern_id = stop_pattern_id;
-        this.stops = stops;
+        this.stopIds = stopIds;
     }
 
     // constructor pre parsing
     public Trip(String stop_pattern_id) {
         this.stop_pattern_id = stop_pattern_id;
-        this.stops = new ArrayList<String>();
+        this.stopIds = new ArrayList<String>();
         this.times = new ArrayList<Double>();
     }
 
-    public void addStop(String stop, Integer stop_sequence, Double time) {
-        this.stops.add(stop);
+    public void addStopId(String stopId, Integer stop_sequence, Double time) {
+        this.stopIds.add(stopId);
         this.times.add(time);
     }
 
@@ -37,18 +37,18 @@ public class Trip {
         this.stop_pattern_id = stop_pattern_id;
     }
 
-    public ArrayList<String> getStops() {
-        return stops;
+    public ArrayList<String> getStopIds() {
+        return stopIds;
     }
 
-    public void setStops(ArrayList<String> stops) {
-        this.stops = stops;
+    public void setStopIds(ArrayList<String> stopIds) {
+        this.stopIds = stopIds;
     }
 
     // to string
     public String toString() {
         String s = "";
-        s += "Trip: " + stop_pattern_id + "\t stops: " + stops.toString() + "\t times: " + times.toString();
+        s += "Trip: " + stop_pattern_id + "\t stops: " + stopIds.toString() + "\t times: " + times.toString();
         return s;
     }
 
