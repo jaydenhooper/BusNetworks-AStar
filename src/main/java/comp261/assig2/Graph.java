@@ -36,7 +36,7 @@ public class Graph {
         // caclculate exact memory usage of the graph
 
         buildStopList();
-        buildTripData();
+        attachTripsToStops();
         createNeighbours();
 
     }
@@ -51,13 +51,13 @@ public class Graph {
 
 
 
-    // buildTripData into stops
-    private void buildTripData() {
+    // attach trip data to each stop
+    private void attachTripsToStops() {
         for (Trip trip : tripsMap.values()) {
-            trip.setColour(Color.hsb(Math.random() * 360.0, 1.0, (Math.random() * 0.5) + 0.5));
             for (String stopId : trip.getStopIds()) {
                 Stop stop = stopsMap.get(stopId);
                 if (stop != null) {
+                    // add the trip to the stop
                     stop.addTrip(trip);
                 } else {
                     System.out.println("Missing stop pattern id: " + stopId);
