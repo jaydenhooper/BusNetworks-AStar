@@ -14,6 +14,8 @@ There is a **new file** `stop_pattern_times.txt` which contains similar informat
 For the complete task in the assignment you will need to use this additional data. 
 For challenge exercises additional data can be downloaded from [https://static.opendata.metlink.org.nz/v1/gtfs/full.zip](https://static.opendata.metlink.org.nz/v1/gtfs/full.zip)
 
+The current code supports **mouse drag** for pan and **scroll** for zoom. There are parts you will need to update with TODOs associated with your assignment 1 and the new bits for Assignment 2. 
+
 ## Submission
 The submission will be using the ECS submission systems and we would strongly prefer the use of the ECS git submission so that submission status of the files can be tracked. We will reuse the folder for assignment-1 https://gitlab.ecs.vuw.ac.nz/course-work/comp261/2022/assignment-1/<username> with your username.  Fork this repository into that area by selecting the `fork` in the top left of this page.  Select the repository area to fork to, to be the repository above. Once you have forked the assignment, you can clone the assignment using the blue `Clone` button to get a copy of your project on your local machine. When you have working code push it to the fork you cloned the project from, and then go to the submit page and select the Assignment 2 repository to submit from the gitlab option.  This will also put a tag in the repository to show when you submitted.  You can check the tags on the left bar `Repository->Tags`.  You can still submit a .zip of the code but if there are any issues or we want to give you partical credit for fixing last minute issues that cannot be done with the .zip file.
 
