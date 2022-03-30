@@ -52,8 +52,8 @@ public class AStar {
 
         // while the queue is not empty
         while (!fringe.isEmpty()) {
-            // get the stop with the lowest cost
-            // TODO: get the top of the queue
+            // TODO: get the stop with the lowest cost
+            // get the top of the queue
             PathItem current = fringe.poll();
 
             // TODO: check if the stop from the queue has been visited
