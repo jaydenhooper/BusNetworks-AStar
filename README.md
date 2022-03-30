@@ -25,8 +25,7 @@ The submission will include
 The places to Edit are listed with TODOs.  Ones that say Assignment 1 should be able to be replaced with how you did assignment 1.
 
 **You can change any of the code to make it easier for you to use and you can add any imports you want**
-
-
+![Intial graph on startup](Initial.png)
 
 ### Minimum: A* search [0-40]
 A* to find the shortest path between two nodes. This will be done by using the Start bus stop and the Goal bus stop.  
@@ -59,6 +58,8 @@ Goal The Terrace (near 230) 05:02
 * [10] Implement an on route stop (ie start to mid then mid to goal)
 * [15] Download the Metlink data and implement the Trips and Stoptime to actually use the real data to make a time of Day A*
 * ... Other stuff that impresses the marker for the final interesting algorithm or data stucture.
+
+![Complete Example](Example.png)
 
 ## File description
 Main parts of Assignment 2 needing updates
