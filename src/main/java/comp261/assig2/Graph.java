@@ -135,7 +135,8 @@ public class Graph {
         }
     }
 
-
+    // I have used Kosaraju's_algorithm from https://en.wikipedia.org/wiki/Kosaraju%27s_algorithm
+    // You can use this or use Tarjan's algorithm for strongly connected components https://en.wikipedia.org/wiki/Tarjan%27s_strongly_connected_components_algorithm
     // find graph components and lable the nodes in each component
     public int findComponents() {
         // TODO: implement component analysis
