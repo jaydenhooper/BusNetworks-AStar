@@ -46,14 +46,6 @@ public class GraphController {
     @FXML
     private Button maori_bt;
     @FXML
-    private Button up;
-    @FXML
-    private Button down;
-    @FXML
-    private Button left;
-    @FXML
-    private Button right;
-    @FXML
     private Canvas mapCanvas;
     @FXML
     private Label nodeDisplay;
@@ -167,48 +159,6 @@ public class GraphController {
     // handle the maori button being pressed connected using FXML
     public void handleMaori(ActionEvent event) {
         System.out.println("Maori with event " + event.getEventType());
-        event.consume();
-    }
-
-    // Assignment 1
-    public void handleZoomin(ActionEvent event) {
-        System.out.println("Zoom in event " + event.getEventType());
-        // TODO: From Assignment 1
-        event.consume();
-    }
-
-    // Assignment 1
-    public void handleZoomout(ActionEvent event) {
-        System.out.println("Zoom out event " + event.getEventType());
-        // TODO: From Assignment 1
-        event.consume();
-    }
-
-    // Assignment 1
-    public void handleUp(ActionEvent event) {
-        System.out.println("Move up event " + event.getEventType());
-        // TODO: From Assignment 1
-        event.consume();
-    }
-
-    // Assignment 1
-    public void handleDown(ActionEvent event) {
-        System.out.println("Move Down event " + event.getEventType());
-        // TODO: From Assignment 1
-        event.consume();
-    }
-
-    // Assignment 1
-    public void handleLeft(ActionEvent event) {
-        System.out.println("Move Left event " + event.getEventType());
-        // TODO: From Assignment 1
-        event.consume();
-    }
-
-    // Assignment 1
-    public void handleRight(ActionEvent event) {
-        System.out.println("Move Right event " + event.getEventType());
-        // TODO: From Assignment 1
         event.consume();
     }
 
@@ -493,9 +443,9 @@ public class GraphController {
         graph.getTrips().values().forEach(trip -> {
             gc.setStroke(Color.BLACK);
             gc.setLineWidth(1);
-            for (int i = 0; i < trip.stops.size() - 1; i++) {
-                Stop fromStop = graph.getStops().get(trip.stops.get(i));
-                Stop toStop = graph.getStops().get(trip.stops.get(i + 1));
+            for (int i = 0; i < trip.stopIds.size() - 1; i++) {
+                Stop fromStop = graph.getStops().get(trip.stopIds.get(i));
+                Stop toStop = graph.getStops().get(trip.stopIds.get(i + 1));
                 if (fromStop != null && toStop != null) {
                     if (fromStop.distance(toStop) > 100) { // if longer than 100 meters make it thin
                         gc.setLineWidth(0.5);

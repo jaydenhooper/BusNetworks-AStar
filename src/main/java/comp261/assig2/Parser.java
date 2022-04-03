@@ -39,7 +39,7 @@ public class Parser {
                     String stopName = tokens[2];
                     double lat = Double.valueOf(tokens[4]);
                     double lon = Double.valueOf(tokens[5]);
-                    stops.put(stopId, new Stop(lon, lat, stopName, stopId, count++));
+                    stops.put(stopId, new Stop(lon, lat, stopName, stopId));
                 }
             }
             br.close();
@@ -77,7 +77,7 @@ public class Parser {
                         trip = new Trip(stopPatternId);
                         tripMap.put(stopPatternId, trip);
                     }
-                    trip.addStop(stopId, stopSequence, time);
+                    trip.addStopId(stopId, stopSequence, time);
                 }
             }
             br.close();
