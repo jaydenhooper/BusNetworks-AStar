@@ -73,6 +73,8 @@ public class GraphController {
     private Double scale = 5000.0; // 5000 gives 1 pixel ~ 20 meters
     private static final double ratioLatLon = 0.73; // in Wellington ratio of latitude to longitude
     private GisPoint mapOrigin = new GisPoint(174.77, -41.3); // Lon Lat for Wellington
+    private final GisPoint VUWSA_OFFICE = new GisPoint(174.769163, -41.288875); // Lon Lat for VUWSA office
+    private final GisPoint SIMON_OFFICE = new GisPoint(174.768795, -41.289576); // Lon Lat for Simon's office
 
     private static int stopSize = 5; // drawing size of stops
     private static int moveDistance = 100; //
@@ -403,9 +405,13 @@ public class GraphController {
         mapCanvas.getGraphicsContext2D().strokeLine(x1, y1, x2, y2);
     }
 
-
+    /**
+     * Draw the Path Edges returned from A* search
+     * @param pathEdges
+     * @param gc
+     */
     public void drawPathEdges(ArrayList <Edge> pathEdges, GraphicsContext gc) {
-
+        // TODO: set Total time
         String path = "Goal " + goalLocation.getName();
         gc.setLineWidth(3);
         for (Edge edge : pathEdges) {
@@ -432,7 +438,8 @@ public class GraphController {
         tripText.setText("Start: " + startLocation.getName() + "\n" + path);
     }
 
-    // draw the fare zones
+    // draw the fare zone
+    // INFO: This is to show you the outline of Wellington.
     public void drawFareZones(Zoning geoJson, GraphicsContext gc) {
         HashMap<String, Shape> zones = geoJson.getZones();
         gc.setFill(Color.BLUE);
@@ -470,8 +477,10 @@ public class GraphController {
                 size = stopSize * 2;
             } else {
                 if (graph.getSubGraphCount() > 0) {
-                    gc.setFill(Color.hsb((90.0 + (stop.getSubGraphId() * (360 / (graph.getSubGraphCount())))) % 360, 1,
-                            1));
+                    // TODO: set fill colour for the subgraph
+                    // something like:
+                    // gc.setFill(Color.hsb((stop.getSubGraphId() * (360 / (graph.getSubGraphCount()))) % 360, 1,1));
+                    gc.setFill(Color.hsb((1*(360/(graph.getSubGraphCount()))) % 360, 1,1));
                 } else {
                     gc.setFill(Color.BLUE);
                 }

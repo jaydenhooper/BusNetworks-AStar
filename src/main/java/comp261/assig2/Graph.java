@@ -9,8 +9,8 @@ import javafx.scene.paint.Color;
 
 public class Graph {
 
-    private HashMap<String, Stop> stops;
-    private HashMap<String, Trip> trips;
+    private HashMap<String, Stop> stopsMap;
+    private HashMap<String, Trip> tripsMap;
 
     private ArrayList<Stop> stopList;
     public Trie trie;
@@ -20,23 +20,23 @@ public class Graph {
     private int subGraphs = 0;
 
     public Graph(HashMap<String, Stop> stops, HashMap<String, Trip> trips) {
-        this.stops = stops;
-        this.trips = trips;
+        this.stopsMap = stops;
+        this.tripsMap = trips;
         buildStopList();
         createNeighbours();
     }
 
     // constructor with parsing
     public Graph(File stopFile, File tripFile, File geoJsonFile) {
-        stops = new HashMap<String, Stop>();
-        trips = new HashMap<String, Trip>();
-        stops = Parser.parseStops(stopFile);
-        trips = Parser.parseTrips(tripFile);
+        stopsMap = new HashMap<String, Stop>();
+        tripsMap = new HashMap<String, Trip>();
+        stopsMap = Parser.parseStops(stopFile);
+        tripsMap = Parser.parseTrips(tripFile);
         geoJson = Parser.parseGeoJson(geoJsonFile);
         // caclculate exact memory usage of the graph
 
         buildStopList();
-        buildTripData();
+        attachTripsToStops();
         createNeighbours();
 
     }
@@ -44,20 +44,20 @@ public class Graph {
     // buildStoplist from hashmap
     private void buildStopList() {
         stopList = new ArrayList<Stop>();
-        for (Stop s : stops.values()) {
+        for (Stop s : stopsMap.values()) {
             stopList.add(s);
         }
     }
 
 
 
-    // buildTripData into stops
-    private void buildTripData() {
-        for (Trip trip : trips.values()) {
-            trip.setColour(Color.hsb(Math.random() * 360.0, 1.0, (Math.random() * 0.5) + 0.5));
-            for (String stopId : trip.getStops()) {
-                Stop stop = stops.get(stopId);
+    // attach trip data to each stop
+    private void attachTripsToStops() {
+        for (Trip trip : tripsMap.values()) {
+            for (String stopId : trip.getStopIds()) {
+                Stop stop = stopsMap.get(stopId);
                 if (stop != null) {
+                    // add the trip to the stop
                     stop.addTrip(trip);
                 } else {
                     System.out.println("Missing stop pattern id: " + stopId);
@@ -66,10 +66,12 @@ public class Graph {
         }
     }
 
-    // build linked list
+    /**
+     * For every stop tell it to construct the edges associated with the trips that have been stored in it.
+     */
     private void createNeighbours() {
-        for (Stop stops : stops.values()) {
-            stops.makeNeighbours(this);
+        for (Stop stop : stopsMap.values()) {
+            stop.makeNeighbours(this.stopsMap);
         }
     }
 
@@ -109,19 +111,19 @@ public class Graph {
     }
 
     public HashMap<String, Stop> getStops() {
-        return stops;
+        return stopsMap;
     }
 
     public void setStops(HashMap<String, Stop> stops) {
-        this.stops = stops;
+        this.stopsMap = stops;
     }
 
     public HashMap<String, Trip> getTrips() {
-        return trips;
+        return tripsMap;
     }
 
     public void setTrips(HashMap<String, Trip> trips) {
-        this.trips = trips;
+        this.tripsMap = trips;
     }
 
 
@@ -133,7 +135,8 @@ public class Graph {
         }
     }
 
-
+    // I have used Kosaraju's_algorithm from https://en.wikipedia.org/wiki/Kosaraju%27s_algorithm
+    // You can use this or use Tarjan's algorithm for strongly connected components https://en.wikipedia.org/wiki/Tarjan%27s_strongly_connected_components_algorithm
     // find graph components and lable the nodes in each component
     public int findComponents() {
         // TODO: implement component analysis
@@ -205,7 +208,7 @@ public class Graph {
     // remove walking edges  - could just make them invalid or check the walking_checkbox
     public void removeWalkingEdges() {
         for (Stop stop : stopList) {
-            stop.deleteAllWalkingEdges();
+            stop.deleteAllEdges(Transport.WALKING_TRIP_ID);// remove all edges with the walking trip id
         }
     }
 
