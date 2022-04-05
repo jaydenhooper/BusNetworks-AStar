@@ -40,9 +40,10 @@ This will call **your A* Algorithm**. The path is displayed in the tripText area
 i.e. each outgoing edge on a stop should have a stop_pattern_id associated with that edge. The output should be something like:
 ```
 Start: Wellington University - Stop B
-5915:4915	walking  	cost 61	    :to goal 05:02
-4915:4914	22_1  	    cost 242	:to goal 04:02
-Goal The Terrace (near 230) 05:02
+5915:4915	walking  	cost 44	:to goal 04:45
+4915:4914	22_1  	cost 242	:to goal 04:02
+Goal The Terrace (near 230)
+ 04:45
 ```
 
 ### Core: Components and Connections [40-65]
