@@ -41,7 +41,7 @@
                         <!-- Usage: mvn clean javafx:run -->
                         <id>default-cli</id>
                         <configuration>
-                            <mainClass>comp261.assign2.Main</mainClass>
+                            <mainClass>comp261.assig2.Main</mainClass>
                         </configuration>
                     </execution>
                 </executions>
