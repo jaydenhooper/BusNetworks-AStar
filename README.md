@@ -50,8 +50,8 @@ Goal The Terrace (near 230)
 1. [15] Show the components. Use depth-first search to show the connected components. Use a recursive depth-first search to build a list of the connected components in the graph. This will go through all stops and set the visited field while keeping count of components found and the root node where you started the depth-first search. Colour the stops in the different components to make them visible. 
 2. [10] Connect the components with **walking edges**. Connect the separate graphs in the system with walking edges. This will also connect Bus stops that are on either side of a road. Make sure A* is using the walking edges. After clicking on the check box include walking edges - update and show the component colours on the graph.
 
-### Complete[75-85]: Time taken
-[10] Walking, buses, trains, cable car and the ferry, all travel at different speeds. The stop_pattern_times.txt includes the time in seconds from the start of the trip. Assume that a bus is waiting for you at any stop.  Work out the time take for each journey, and update A* to use time as the cost metric rather than distance.
+### Complete[65-85]: Time taken
+[20] Walking, buses, trains, cable car and the ferry, all travel at different speeds. The stop_pattern_times.txt includes the time in seconds from the start of the trip. Assume that a bus is waiting for you at any stop.  Work out the time take for each journey, and update A* to use time as the cost metric rather than distance.
 
 ### Challenge[85-100]: Fun stuff do something interesting
 * [5] Allow time or distance in A* search
