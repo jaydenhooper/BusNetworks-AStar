@@ -46,14 +46,6 @@ public class GraphController {
     @FXML
     private Button maori_bt;
     @FXML
-    private Button up;
-    @FXML
-    private Button down;
-    @FXML
-    private Button left;
-    @FXML
-    private Button right;
-    @FXML
     private Canvas mapCanvas;
     @FXML
     private Label nodeDisplay;
@@ -167,48 +159,6 @@ public class GraphController {
     // handle the maori button being pressed connected using FXML
     public void handleMaori(ActionEvent event) {
         System.out.println("Maori with event " + event.getEventType());
-        event.consume();
-    }
-
-    // Assignment 1
-    public void handleZoomin(ActionEvent event) {
-        System.out.println("Zoom in event " + event.getEventType());
-        // TODO: From Assignment 1
-        event.consume();
-    }
-
-    // Assignment 1
-    public void handleZoomout(ActionEvent event) {
-        System.out.println("Zoom out event " + event.getEventType());
-        // TODO: From Assignment 1
-        event.consume();
-    }
-
-    // Assignment 1
-    public void handleUp(ActionEvent event) {
-        System.out.println("Move up event " + event.getEventType());
-        // TODO: From Assignment 1
-        event.consume();
-    }
-
-    // Assignment 1
-    public void handleDown(ActionEvent event) {
-        System.out.println("Move Down event " + event.getEventType());
-        // TODO: From Assignment 1
-        event.consume();
-    }
-
-    // Assignment 1
-    public void handleLeft(ActionEvent event) {
-        System.out.println("Move Left event " + event.getEventType());
-        // TODO: From Assignment 1
-        event.consume();
-    }
-
-    // Assignment 1
-    public void handleRight(ActionEvent event) {
-        System.out.println("Move Right event " + event.getEventType());
-        // TODO: From Assignment 1
         event.consume();
     }
 
@@ -416,12 +366,10 @@ public class GraphController {
         gc.setLineWidth(3);
         for (Edge edge : pathEdges) {
             if (edge.getTripId() == Transport.WALKING_TRIP_ID) {
-                // TODO: set walking color
-                // gc.setStroke(Color.BLACK);
+                gc.setStroke(Color.BLACK);
             } else {
                 if (Transport.isTrain(edge.getTripId())) {
-                    // TODO set train color
-                    // gc.setStroke(Color.GREEN);
+                    gc.setStroke(Color.GREEN);
                 } else {
                     gc.setStroke(Color.RED);
                 }
@@ -468,13 +416,16 @@ public class GraphController {
         gc.clearRect(0, 0, mapCanvas.getWidth(), mapCanvas.getHeight());
 
         // store node list so we can use nodes to find edge end points.
-        // TODO: Assignment 1 get stops from graph
+        // TODO: Assignment 1 get nodes
+        ArrayList<Stop> stopList = graph.getStopList();
 
-        // TODO: Assignment 1 for all the stops draw the stop
-        {
-            //TODO: Assignment 1 if highlighed set colour to red
-            {
-                // Assignment 2  
+        // draw nodes using a lambda function
+        stopList.forEach(stop -> {
+            int size = stopSize;
+            if (highlightNodes.contains(stop)) {
+                gc.setFill(Color.RED);
+                size = stopSize * 2;
+            } else {
                 if (graph.getSubGraphCount() > 0) {
                     // TODO: set fill colour for the subgraph
                     // something like:
@@ -484,30 +435,35 @@ public class GraphController {
                     gc.setFill(Color.BLUE);
                 }
             }
-            // TODO: Assignment 1 use projection to show a stop in screen coordinates
-            // something like:
-            //           Point2D screenPoint = Projection.model2Screen(stop.getPoint(), this);
-            // TODO: Assignment 1 draw a circle in the right place
-            Point2D screenPoint = Projection.model2Screen(VUWSA_OFFICE, this);
-            drawCircle(screenPoint.getX(), screenPoint.getY(), 5);
-        }
+            Point2D screenPoint = Projection.model2Screen(stop.getPoint(), this);
+            drawCircle(screenPoint.getX(), screenPoint.getY(), size);
+        });
 
-        // TODO: Assignment 1 draw edge/trips
-        // TODO: for each trip draw the edges
-        {
+        // draw edges using a lambda function
+        graph.getTrips().values().forEach(trip -> {
             gc.setStroke(Color.BLACK);
             gc.setLineWidth(1);
-            // TODO: Assignment 1 for stop in the trip draw the edge from Stop i to i+1
-            {
-                // TODO: Assignment 1 find the FromStop and ToStop and draw the edge
-                {
-                    Point2D startPoint = Projection.model2Screen(SIMON_OFFICE, this);
-                    Point2D endPoint = Projection.model2Screen(VUWSA_OFFICE, this);
+            for (int i = 0; i < trip.stopIds.size() - 1; i++) {
+                Stop fromStop = graph.getStops().get(trip.stopIds.get(i));
+                Stop toStop = graph.getStops().get(trip.stopIds.get(i + 1));
+                if (fromStop != null && toStop != null) {
+                    if (fromStop.distance(toStop) > 100) { // if longer than 100 meters make it thin
+                        gc.setLineWidth(0.5);
+                        gc.setStroke(Color.GRAY);
+                    } else {
+                        gc.setLineWidth(1);
+                        gc.setStroke(Color.BLACK);
+                    }
+                    Point2D startPoint = Projection.model2Screen(fromStop.getPoint(), this);
+                    Point2D endPoint = Projection.model2Screen(toStop.getPoint(), this);
                     drawLine(startPoint.getX(), startPoint.getY(), endPoint.getX(), endPoint.getY());
+                } else {
+                    System.out.println("Missing stop pattern id: " + fromStop.getId() + " " + toStop.getId());
                 }
             }
-        }
-     
+        });
+
+        // TODO: set Total time     
         if (pathEdges != null) {
             drawPathEdges(pathEdges, gc);
         }
