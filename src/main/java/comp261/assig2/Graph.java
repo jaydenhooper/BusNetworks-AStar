@@ -13,7 +13,7 @@ public class Graph {
     private HashMap<String, Trip> tripsMap;
 
     private ArrayList<Stop> stopList;
-    public Trie trie;
+    public Trie trie = new Trie();
 
     public Zoning geoJson;
 
@@ -38,7 +38,7 @@ public class Graph {
         buildStopList();
         attachTripsToStops();
         createNeighbours();
-
+        createTrie();
     }
 
     // buildStoplist from hashmap
@@ -77,32 +77,12 @@ public class Graph {
 
     // get first stop that starts with a search string
     public Stop getFirstStop(String search) {
-        // Search for the first stop matching the search string
-        // This is slow and would be faster with a Trie 
-        Stop firstStop = null;
-        for (Stop stop : stopList) {
-            if (stop.getName().startsWith(search)) {
-                firstStop = stop;
-                break;
-            }
-        }
-        return firstStop;
-        // This would be the call to the Trie from Assignment 1
-        //return trie.getAll(search).get(0);
+        return trie.get(search).get(0);
     }
 
     // get all stops that start with a search string
     public List<Stop> getAllStops(String search) {
-        //search for all stops matching the search string
-        List<Stop> allStops = new ArrayList<Stop>();
-        for (Stop stop : stopList) {
-            if (stop.getName().startsWith(search)) {
-                allStops.add(stop);
-            }
-        }
-        return allStops;
-        // This would be the call to the Trie from Assignment 1
-        // return trie.getAll(search);
+        return trie.get(search);
     }
 
     // getter for stopList
@@ -132,6 +112,16 @@ public class Graph {
         for (Stop stop : stopList) {
             stop.setVisited(false);
             stop.setCost(Double.MAX_VALUE);
+        }
+    }
+
+    // build Trie.
+    private void createTrie() {
+        for (Stop stop : stopList) {
+            if (stop != null) {
+                trie.add(stop.getName().toLowerCase(), stop);
+                trie.add(stop.getId().toLowerCase(), stop);
+            }
         }
     }
 
