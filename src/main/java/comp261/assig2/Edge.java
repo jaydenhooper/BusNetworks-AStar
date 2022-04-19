@@ -11,7 +11,7 @@ public class Edge {
     private double time; // in seconds between the two stops of the edge
     private double cost; // a cost for the edge for other costs
 
-    // todo: add a constructor
+    // add a constructor
     public Edge(Stop fromStop, Stop toStop, String tripId, double time) {
         this.fromStop = fromStop;
         this.toStop = toStop;
@@ -20,7 +20,7 @@ public class Edge {
         this.tripId = tripId;
     }
 
-    // todo add getters and setters
+    // add getters and setters
 
     public Stop getFromStop() {
         return fromStop;

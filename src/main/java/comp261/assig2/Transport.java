@@ -113,6 +113,11 @@ public class Transport {
         }
     }
 
+    public static double getMaxMPS(){
+        return Math.max(Math.max(BUS_SPEED_MPS, TRAIN_SPEED_MPS), 
+                        Math.max(CABLECAR_SPEED_MPS, FERRY_SPEED_MPS));
+    }
+
     public static String toTimeString(Double time){
         return String.format("%02d:%02d", (int)Math.floor(time/60), (int)Math.floor((time - Math.floor(time/60)*60)));
     }

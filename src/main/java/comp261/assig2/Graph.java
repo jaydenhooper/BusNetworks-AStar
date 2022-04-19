@@ -129,17 +129,27 @@ public class Graph {
     // You can use this or use Tarjan's algorithm for strongly connected components https://en.wikipedia.org/wiki/Tarjan%27s_strongly_connected_components_algorithm
     // find graph components and lable the nodes in each component
     public int findComponents() {
-        // TODO: implement component analysis
-
-        // TODO: reset visited and cost        
-        
-        // TODO: go through all stops use recursive to visitAllConnections and build visit order
-
-        // TODO: search in reverse visit order setting the root node recurssively on assignRoot
-        // TODO: keep a count of the components
-        
-        // TODO: set the subgraphs to number of components and return it
-        // something like subGraphs = components;
+        // implement component analysis
+        // reset visited and cost        
+        resetVisited();
+        subGraphs = 0;
+        // go through all stops use recursive to visitAllConnections and build visit order
+        ArrayList<Stop> visitOrder = new ArrayList<>();
+        for(Stop root : stopList){
+            if(root.isVisited()){
+                continue;
+            }
+            visitAllConnections(root, visitOrder);
+            // keep a count of the components
+            subGraphs++;
+            // search in reverse visit order setting the root node recurssively on assignRoot
+            for(int i = visitOrder.size()-1; i >= 0; i--){
+                Stop s = visitOrder.get(i);
+                // set the subgraphs to number of components and return it
+                assignRoot(s, root, subGraphs);
+            }
+            visitOrder.clear();
+        }
         return subGraphs;
     }
 
@@ -147,18 +157,31 @@ public class Graph {
      * Recursively visit all connections of a stop and build a list of stops visited from this stop
      */
     private void visitAllConnections(Stop stop, ArrayList<Stop> visitOrder) {
-        // TODO: set vistited to true
-        // TODO: add stop to visitOrder
-        // TODO: for each edge of the stop if the ToStop is not visited, recurse this function with the toStop of the neighbour Edge
-        
+        // set vistited to true
+        stop.setVisited(true);
+        // add stop to visitOrder
+        visitOrder.add(stop);
+        // for each edge of the stop if the ToStop is not visited, recurse this function with the toStop of the neighbour Edge
+        for(Edge edge : stop.getNeighbours()){
+            if(!edge.getToStop().isVisited()){
+                visitAllConnections(edge.getToStop(), visitOrder);
+            }
+        }
     }
 
     /**
      * Recursively assign the root node of a subgraph
      */
     public void assignRoot(Stop stop, Stop root, int component) {
-        // TODO: set the root of the subgraph to the stop, and the subgraph ID
-        // TODO: for each of the edges in neighbours if the toStop root is empty recurse assigning root and component
+        // set the root of the subgraph to the stop, and the subgraph ID
+        stop.setRoot(root);
+        stop.setSubGraphId(component);
+        // for each of the edges in neighbours if the toStop root is empty recurse assigning root and component
+        for(Edge edge : stop.getNeighbours()){
+            if(edge.getToStop().getRoot() == null){
+                assignRoot(edge.getToStop(), root, component);
+            }
+        }
     }
 
     /**
@@ -176,25 +199,29 @@ public class Graph {
         return subGraphs;
     }
 
-    // add walking edges
-    public void addWalkingEdges(double walkingDistance) {
-        // TODO: add walking edges to all stops
+    //add walking edges
+    public int addWalkingEdges(double walkingDistance) {
+        // add walking edges to all stops
         int count = 0;
-        // TODO: step through all stops and all potential neighbours 
-         {
-             {
-                //TODO: check the distannce between to stops and if it is less then walkingDistance add an edge to the graph
-                // something like:   
-                // stopFrom.addNeighbour( new Edge(stopFrom, stopTo, Transport.WALKING_TRIP_ID, stopFrom.distance(stopTo)/Transport.WALKING_SPEED_MPS));
-                
-                // count the number of edges added
-                count++;
-
+        // step through all stops and all potential neighbours 
+        for(Stop fromStop : stopList){
+            // check the distance between to stops and if it is less then walkingDistance add an edge to the graph
+            for(Stop toStop : stopList){
+                if(fromStop.getId() != toStop.getId()){
+                    double distance = fromStop.distance(toStop);
+                    if(distance < walkingDistance){
+                        fromStop.addNeighbour(new Edge (fromStop, toStop, Transport.WALKING_TRIP_ID,
+                        fromStop.distance(toStop) / Transport.WALKING_SPEED_MPS));
+                        count++;
+                    }
+                }
             }
         }
         System.out.println("Walking edges added: " + count);
+        return count;
     }
 
+    
     // remove walking edges  - could just make them invalid or check the walking_checkbox
     public void removeWalkingEdges() {
         for (Stop stop : stopList) {

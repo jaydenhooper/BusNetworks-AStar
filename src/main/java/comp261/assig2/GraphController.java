@@ -211,7 +211,9 @@ public class GraphController {
     public void handleShowConnectedComponents(ActionEvent event) {
         System.out.println("Show connected components event " + event.getEventType());
         //INFO : This is where your find component code is called
-        graph.findComponents();
+        int components = graph.findComponents();
+        tripText.appendText("Number of connected components: " + components + "\n");
+
         drawGraph(graph);
     }
 
@@ -219,10 +221,12 @@ public class GraphController {
     public void handleAddWalking(ActionEvent event) {
         System.out.println("Add walking event " + walking_ch.isSelected());
         if (walking_ch.isSelected()) {
-            graph.addWalkingEdges(Double.parseDouble(walkingDistance_tf.getText()));
+            int count = graph.addWalkingEdges(Double.parseDouble(walkingDistance_tf.getText()));
+            tripText.appendText("Number of walking edges: " + count + "\n");
         } else {
             graph.removeWalkingEdges();
         }
+        graph.findComponents();
         drawGraph(graph);
     }
 
@@ -361,7 +365,8 @@ public class GraphController {
      * @param gc
      */
     public void drawPathEdges(ArrayList <Edge> pathEdges, GraphicsContext gc) {
-        // TODO: set Total time
+        // set Total time
+        int totalTime = 0;
         String path = "Goal " + goalLocation.getName();
         gc.setLineWidth(3);
         for (Edge edge : pathEdges) {
@@ -378,13 +383,23 @@ public class GraphController {
             Point2D screenToPoint = Projection.model2Screen(edge.getToStop().getPoint(), this);
             drawLine(screenFromPoint.getX(), screenFromPoint.getY(), screenToPoint.getX(), screenToPoint.getY());
             // TODO: calculation of time
-
-            // TODO: prepend the edge information to the path string
-            // probably use edge.getFromStop().getId() edge.getToStop().getId() edge.getTripId() edge.getTime()) totalTime  "\n" + path;
+            if(AStar.isTimeHeuristic()){
+                double speed = Transport.getSpeedMPS(edge.getTripId());
+                totalTime += edge.getDistance() / speed;
+            }
+            else{
+                totalTime += edge.getDistance();
+            }
+            // prepend the edge information to the path string
+            // probably use 
+            path = "From Stop: "    + edge.getFromStop().getId() + 
+                   ", To Stop: "    + edge.getToStop().getId() +
+                   ", TripID: "     + edge.getTripId() + edge.getTime() + 
+                   ", Total Time: " + totalTime + "\n" + path;
             // prepending to get the path in reverse order
         }
-        // TODO: add total time to the path
-
+        // add total time to the path
+        path = "Total time: " + totalTime + " seconds " + "\n" + path;
         tripText.setText("Start: " + startLocation.getName() + "\n" + path);
     }
 
@@ -416,7 +431,6 @@ public class GraphController {
         gc.clearRect(0, 0, mapCanvas.getWidth(), mapCanvas.getHeight());
 
         // store node list so we can use nodes to find edge end points.
-        // TODO: Assignment 1 get nodes
         ArrayList<Stop> stopList = graph.getStopList();
 
         // draw nodes using a lambda function
@@ -427,10 +441,10 @@ public class GraphController {
                 size = stopSize * 2;
             } else {
                 if (graph.getSubGraphCount() > 0) {
-                    // TODO: set fill colour for the subgraph
+                    // set fill colour for the subgraph
                     // something like:
-                    // gc.setFill(Color.hsb((stop.getSubGraphId() * (360 / (graph.getSubGraphCount()))) % 360, 1,1));
-                    gc.setFill(Color.hsb((1*(360/(graph.getSubGraphCount()))) % 360, 1,1));
+                    gc.setFill(Color.hsb((stop.getSubGraphId() * (360 / (graph.getSubGraphCount()))) % 360, 1,1));
+                    //gc.setFill(Color.hsb((1*(360/(graph.getSubGraphCount()))) % 360, 1,1));
                 } else {
                     gc.setFill(Color.BLUE);
                 }

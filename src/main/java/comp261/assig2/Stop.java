@@ -128,7 +128,7 @@ public class Stop {
      * @return string of the stop information in the format: XXXX: long name at (lon,lat)
      */
     public String toString() {
-        // TODO: decide how you want to print a stop
+        // decide how you want to print a stop
         return id + ": " + name + " at (" + loc.getLon() + ", " + loc.getLat() + ")";
     }
 
