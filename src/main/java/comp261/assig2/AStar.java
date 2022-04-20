@@ -21,6 +21,7 @@ import javafx.scene.text.Font;
 public class AStar {
 
     private static boolean timeHeuristic = true;
+    private static String transportType = "All";
 
     public static ArrayList<Edge> findShortestPathEdges(Graph graph, Stop start, Stop end) {
 
@@ -30,6 +31,7 @@ public class AStar {
         }
         // used to check how many nodes you visited. Lower is better H.
         int totalExplored = 0;
+
 
         ArrayList<Stop> stops = graph.getStopList();
 
@@ -75,9 +77,15 @@ public class AStar {
                 ArrayList<Edge> shortestEdgePath = makeEdgePath(graph, visitedStops, start, end);
                 return shortestEdgePath;
             }
-
             // go through each of the current stop's neighbours and add to the fringe
             for (Edge edge : currentStop.getNeighbours()) {
+                // check if the transport type is specified
+                if (!transportType.equals("All")){
+                    // continue if the edge is NOT the transport type we are looking for
+                    if (!Transport.getTransportType(edge.getTripId()).equals(AStar.transportType)) {
+                        continue;
+                    }
+                }
                 // get the neighbour from the edge
                 Stop neighbour = edge.getToStop();
                 // if the neighbour has not been visited already
@@ -162,6 +170,14 @@ public class AStar {
 
     public static boolean isTimeHeuristic() {
         return timeHeuristic;
+    }
+
+    public static void setTimeHeuristic(boolean timeHeuristic) {
+        AStar.timeHeuristic = timeHeuristic;
+    }
+
+    public static void setTransportType(String transportValue) {
+        AStar.transportType = transportValue;
     }
 
 }

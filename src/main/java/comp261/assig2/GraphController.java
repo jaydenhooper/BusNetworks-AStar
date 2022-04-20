@@ -4,6 +4,7 @@ import javafx.fxml.FXML;
 import javafx.geometry.Point2D;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextArea;
@@ -51,15 +52,26 @@ public class GraphController {
     private Label nodeDisplay;
     @FXML
     private TextArea tripText;
+    @FXML
+    private ChoiceBox<String> tripTypes;
 
     @FXML
     private CheckBox walking_ch;
+    @FXML
+    private CheckBox timeHeuristic;
     @FXML
     private Button connectedComponents_bt;
     @FXML
     private Slider walkingDistance_sl;
     @FXML
     private TextField walkingDistance_tf;
+
+
+    @FXML
+    private void initializeChoiceBox(){
+        tripTypes.getItems().addAll("All", "Train", "Cable Car", "Ferry", "Walk", "Bus");
+        tripTypes.setValue("All");
+    }
 
     // These are used to map the nodes to the location on screen
     private Double scale = 5000.0; // 5000 gives 1 pixel ~ 20 meters
@@ -90,6 +102,7 @@ public class GraphController {
                 new File("data/stop_pattern_times.txt"),
                 new File("data/Wellington.gis.json.csv"));
         drawGraph(graph);
+        initializeChoiceBox();
     }
 
     // get scale
@@ -230,6 +243,20 @@ public class GraphController {
         drawGraph(graph);
     }
 
+    public void handleTime(ActionEvent event) {
+        System.out.println("Time event " + event.getEventType());
+        if (timeHeuristic.isSelected()){
+            AStar.setTimeHeuristic(true);
+            return;
+        }
+        AStar.setTimeHeuristic(false);
+    }
+
+    public void handleTransportType(ActionEvent event){
+        System.out.println("Transport type event " + event.getEventType());
+        AStar.setTransportType(tripTypes.getValue());
+    }
+
     // This handles the connection between the slider and the text field
     public void handleWalkingDistance(ActionEvent event) {
         // devide the text value by two so the slider is 0 - 200
@@ -366,7 +393,7 @@ public class GraphController {
      */
     public void drawPathEdges(ArrayList <Edge> pathEdges, GraphicsContext gc) {
         // set Total time
-        int totalTime = 0;
+        int gCost = 0;
         String path = "Goal " + goalLocation.getName();
         gc.setLineWidth(3);
         for (Edge edge : pathEdges) {
@@ -385,21 +412,34 @@ public class GraphController {
             // TODO: calculation of time
             if(AStar.isTimeHeuristic()){
                 double speed = Transport.getSpeedMPS(edge.getTripId());
-                totalTime += edge.getDistance() / speed;
+                gCost += edge.getDistance() / speed;
             }
-            else{
-                totalTime += edge.getDistance();
+            else{   // distance heuristic
+                gCost += edge.getDistance();
             }
             // prepend the edge information to the path string
-            // probably use 
-            path = "From Stop: "    + edge.getFromStop().getId() + 
+            // probably use \
+            if(AStar.isTimeHeuristic()){
+                path = "From Stop: "    + edge.getFromStop().getId() + 
                    ", To Stop: "    + edge.getToStop().getId() +
                    ", TripID: "     + edge.getTripId() + edge.getTime() + 
-                   ", Total Time: " + totalTime + "\n" + path;
+                   ", Total Time: " + gCost + "\n" + path;
+            }
+            else{   // distance heuristic, total time is actually distance
+                path = "From Stop: "    + edge.getFromStop().getId() + 
+                   ", To Stop: "    + edge.getToStop().getId() +
+                   ", TripID: "     + edge.getTripId() + edge.getTime() + 
+                   ", Total Distance: " + gCost + "\n" + path;
+            }
             // prepending to get the path in reverse order
         }
         // add total time to the path
-        path = "Total time: " + totalTime + " seconds " + "\n" + path;
+        if(AStar.isTimeHeuristic()){
+            path = "Total time: " + gCost + " seconds " + "\n" + path;
+        }
+        else{
+            path = "Total distance: " + gCost + " meters " + "\n" + path;
+        }
         tripText.setText("Start: " + startLocation.getName() + "\n" + path);
     }
 

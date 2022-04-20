@@ -113,6 +113,29 @@ public class Transport {
         }
     }
 
+    /**
+     * get transport type based on tripID
+     * 
+     * @param tripID the id of the trip
+     * @return  returns a string representing the transportation type
+     */
+    public static String getTransportType(String tripID) {
+        if (isTrain(tripID)) {
+            return "Train";
+        } else if (isCableCar(tripID)) {
+            return "Cable Car";
+        } else if (isFerry(tripID)) {
+            return "Ferry";
+        } else if (isWalking(tripID)) {
+            return "Walk";
+        } else {
+            return "Bus";
+        }
+    }
+
+    /**
+     * @return returns the maximum possible speed
+     */
     public static double getMaxMPS(){
         return Math.max(Math.max(BUS_SPEED_MPS, TRAIN_SPEED_MPS), 
                         Math.max(CABLECAR_SPEED_MPS, FERRY_SPEED_MPS));
