@@ -92,6 +92,11 @@ public class AStar {
                 if (neighbour == null) {
                     continue;
                 }
+                // flexible walking distance calculated for challenge
+                // if the edge is walking and we are using a time heuristic, set cost to distance / walking_speed_mps
+                if(Transport.getTransportType(edge.getTripId()).equals("Walk")){
+                    AStar.flexibleWalkingDistance(edge);
+                }
                 if (!neighbour.isVisited()) {
                     // set the neighbour's cost to the current stop's cost + the edge's cost (time or distance)
                     double g = current.getCost() + edge.getCost();
@@ -168,6 +173,10 @@ public class AStar {
         return current.distance(goal);
     }
 
+    /**
+     * 
+     * @return
+     */
     public static boolean isTimeHeuristic() {
         return timeHeuristic;
     }
@@ -180,4 +189,18 @@ public class AStar {
         AStar.transportType = transportValue;
     }
 
+    /**
+     * calculates the walking distance for the edge, whether the heuristic is time or distance
+     * @param edge the edge to calculate the distance for
+     */
+    public static void flexibleWalkingDistance(Edge edge) {
+        double distance = edge.getToStop().distance(edge.getFromStop());
+        if(AStar.timeHeuristic){
+            // need to recalculate from scratch, else distance may be equal to speed
+            double time = distance / Transport.WALKING_SPEED_MPS;
+            edge.setCost(time);
+        }
+        // set cost to distance
+        edge.setCost(distance);
+    }
 }

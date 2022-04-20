@@ -225,7 +225,7 @@ public class GraphController {
         System.out.println("Show connected components event " + event.getEventType());
         //INFO : This is where your find component code is called
         int components = graph.findComponents();
-        tripText.appendText("Number of connected components: " + components + "\n");
+        tripText.setText("Number of connected components: " + components + "\n");
 
         drawGraph(graph);
     }
